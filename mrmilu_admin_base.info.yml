@@ -1,0 +1,6 @@
+name: Mr.Milu Administration Base
+description: Provides basic administration functionality, like an editor rol or menu
+package: Mr. Milú
+version: 1.0.0
+type: module
+core: 8.x
