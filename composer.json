@@ -1,5 +1,5 @@
 {
- "name": "mrmilu/mrmilu_admin_base",
- "description": "Provides basic administration functionality, like an editor rol or menu",
- "type": "drupal-mrmilu-module"
+    "name": "mrmilu/mrmilu_admin_base",
+    "description": "Provides basic administration functionality, like an editor rol or menu",
+    "type": "drupal-mrmilu-module"
 }

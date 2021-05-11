@@ -1,0 +1,18 @@
+mrmilu_admin_base.editor.extra_links:
+  deriver: \Drupal\mrmilu_admin_base\Plugin\Derivative\EditorExtraLinks
+  menu_name: editor
+
+# Administration menu items
+mrmilu_admin_base.config:
+  title: 'Mr.Miú administration'
+  menu_name: main
+  parent: system.admin_config
+  route_name: mrmilu_admin.admin
+  weight: 99
+
+mrmilu_admin_base.editors_menu_config:
+  title: 'Editors menu'
+  menu_name: main
+  parent: mrmilu_admin_base.config
+  route_name: mrmilu_admin.editors_menu_config
+  weight: 99

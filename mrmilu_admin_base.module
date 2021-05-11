@@ -1,0 +1,10 @@
+<?php
+
+use Drupal\mrmilu_admin_base\Render\Element\EditorAdminToolbar;
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+function mrmilu_admin_base_toolbar_alter(&$items) {
+  $items['administration']['tray']['toolbar_administration']['#pre_render'] = [[EditorAdminToolbar::class, 'preRenderTray']];
+}

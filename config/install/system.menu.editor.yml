@@ -1,0 +1,10 @@
+langcode: en
+status: true
+id: editor
+label: 'Editor menu'
+description: 'User friendly menu for editors'
+locked: false
+dependencies:
+  enforced:
+     module:
+       - mrmilu_admin_base

@@ -1,0 +1,17 @@
+mrmilu_admin.admin:
+  path: '/admin/config/mrmilu-admin'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Mr. Milú administration'
+  requirements:
+    _permission: 'administer mrmilu configuration'
+
+mrmilu_admin.editors_menu_config:
+  path: '/admin/config/mrmilu-admin/editors-menu'
+  defaults:
+    _title: 'Editors menu'
+    _form: '\Drupal\mrmilu_admin_base\Form\EditorsMenuConfigurationForm'
+  requirements:
+    _permission: 'administer mrmilu configuration'
+  options:
+    _admin_route: TRUE
