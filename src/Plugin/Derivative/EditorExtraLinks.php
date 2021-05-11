@@ -3,6 +3,7 @@
 namespace Drupal\mrmilu_admin_base\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
@@ -32,11 +33,19 @@ class EditorExtraLinks extends DeriverBase implements ContainerDeriverInterface 
   protected $moduleHandler;
 
   /**
+   * The 'mrmilu_admin.editors_menu' config.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $config;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, Config $config) {
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
+    $this->config = $config;
   }
 
   /**
@@ -45,7 +54,8 @@ class EditorExtraLinks extends DeriverBase implements ContainerDeriverInterface 
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('config.factory')->get('mrmilu_admin.editors_menu'),
     );
   }
 
@@ -53,10 +63,10 @@ class EditorExtraLinks extends DeriverBase implements ContainerDeriverInterface 
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-
+    $visibleElements = $this->config->get('visible_elements');
     $links = [];
 
-    if ($this->moduleHandler->moduleExists('node')) {
+    if ($this->moduleHandler->moduleExists('node') && !empty($visibleElements['node'])) {
       $links['node'] = [
         'title' => $this->t('Content'),
         'route_name' => 'system.admin_content',
@@ -78,7 +88,7 @@ class EditorExtraLinks extends DeriverBase implements ContainerDeriverInterface 
       }
     }
 
-    if ($this->moduleHandler->moduleExists('taxonomy')) {
+    if ($this->moduleHandler->moduleExists('taxonomy') && !empty($visibleElements['taxonomy'])) {
       $links['taxonomy'] = [
         'title' => $this->t('Taxonomy'),
         'route_name' => 'entity.taxonomy_vocabulary.collection',
@@ -86,7 +96,7 @@ class EditorExtraLinks extends DeriverBase implements ContainerDeriverInterface 
       ] + $base_plugin_definition;
     }
 
-    if ($this->moduleHandler->moduleExists('media')) {
+    if ($this->moduleHandler->moduleExists('media') && !empty($visibleElements['media'])) {
       $links['media_page'] = [
         'title' => $this->t('Media'),
         'route_name' => 'view.media.media_page_list',
@@ -108,7 +118,7 @@ class EditorExtraLinks extends DeriverBase implements ContainerDeriverInterface 
       }
     }
 
-    if ($this->moduleHandler->moduleExists('menu_ui')) {
+    if ($this->moduleHandler->moduleExists('menu_ui') && !empty($visibleElements['menus'])) {
       // Load all menus by default. You should install install menu_admin_per_menu module
       $allowed_menus = $this->entityTypeManager->getStorage('menu')->loadByProperties([]);
       uasort($allowed_menus, [Menu::class, 'sort']);

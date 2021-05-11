@@ -1,1 +1,6 @@
 roles: {  }
+visible_elements:
+  node: node
+  taxonomy: taxonomy
+  media: media
+  menus: menus

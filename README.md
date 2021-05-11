@@ -6,14 +6,14 @@ There is a menu entry in *Manage > Configuration > Mr.Milú administration* wher
 
 ## Functionality
 ### Editors menu
-You can select a simple and intuitive menu for editors. The roles which will see this menu instead of the default one are configured in `/admin/config/mrmilu-admin/editors-menu. By default, the links provider are
+You can select a simple and intuitive menu for editors. The roles which will see this menu instead of the default one are configured in */admin/config/mrmilu-admin/editors-menu*. By default, the links provider are
 
 - **Content**: Links to content overview page and links to create nodes of content types with permission.
 - **Taxonomy**: Link to the vocabulary overview page. All vocabularies are listed but user can only edit those with permissions.
 - **Media**: Link to the media over view page.
 - **Menus**: Link to a list of menus that can be edited by the user (It is recommended to install and configure [menu_admin_per_menu](https://www.drupal.org/project/menu_admin_per_menu) to be able to set permissions to specific menus.)
 
-Each link will only be visible if user has access to view it.
+Each link will only be visible if user has access to view it and if link is enabled in configuration page.
 #### Customization
 Customize this menu with your own links is easy. Simply follow these steps:
 1. Create a module called **your_project_admin**

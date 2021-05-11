@@ -3,6 +3,7 @@
 namespace Drupal\mrmilu_admin_base\Form;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\RoleInterface;
@@ -19,13 +20,28 @@ class EditorsMenuConfigurationForm extends ConfigFormBase {
   protected $entityTypeManager;
 
   /**
-   * Constructs a new form.
+   * The module handler.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  protected $moduleHandler;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->moduleHandler = $module_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('module_handler')
+    );
   }
 
   /**
@@ -35,15 +51,6 @@ class EditorsMenuConfigurationForm extends ConfigFormBase {
     return [
       'mrmilu_admin.editors_menu'
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager')
-    );
   }
 
   /**
@@ -74,6 +81,27 @@ class EditorsMenuConfigurationForm extends ConfigFormBase {
       '#description' => $this->t('Roles whose admin menu will be replaced with the editors menu.'),
     ];
 
+    $visibleElementsOptions = [];
+    if ($this->moduleHandler->moduleExists('node')) {
+      $visibleElementsOptions['node'] = $this->t('Content');
+    }
+    if ($this->moduleHandler->moduleExists('taxonomy')) {
+      $visibleElementsOptions['taxonomy'] = $this->t('Taxonomy');
+    }
+    if ($this->moduleHandler->moduleExists('media')) {
+      $visibleElementsOptions['media'] = $this->t('Media');
+    }
+    if ($this->moduleHandler->moduleExists('menu_ui')) {
+      $visibleElementsOptions['menus'] = $this->t('Menus');
+    }
+    $form['visible_elements'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Visible elements'),
+      '#options' => $visibleElementsOptions,
+      '#default_value' => $this->config('mrmilu_admin.editors_menu')->get('visible_elements'),
+      '#description' => $this->t('Mr.Milú Administration Base module provides some links by default. You can choose which ones will be visible.'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -81,7 +109,9 @@ class EditorsMenuConfigurationForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->configFactory->getEditable('mrmilu_admin.editors_menu')->set('roles', $form_state->getValue('roles'))
+    $this->configFactory->getEditable('mrmilu_admin.editors_menu')
+      ->set('roles', $form_state->getValue('roles'))
+      ->set('visible_elements', $form_state->getValue('visible_elements'))
       ->save();
     $this->messenger()->addStatus($this->t('The configuration options have been saved. Changes take effect after clear caches.'));
   }
