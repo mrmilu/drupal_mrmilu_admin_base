@@ -73,11 +73,12 @@ class EditorsMenuConfigurationForm extends ConfigFormBase {
         $roleOptions[$roleId] = $rol->label();
       }
     }
+    $defaultValue = $this->config('mrmilu_admin.editors_menu')->get('roles');
     $form['roles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Roles'),
       '#options' => $roleOptions,
-      '#default_value' => $this->config('mrmilu_admin.editors_menu')->get('roles'),
+      '#default_value' => !empty($defaultValue) ? $defaultValue : [],
       '#description' => $this->t('Roles whose admin menu will be replaced with the editors menu.'),
     ];
 
@@ -94,11 +95,12 @@ class EditorsMenuConfigurationForm extends ConfigFormBase {
     if ($this->moduleHandler->moduleExists('menu_ui')) {
       $visibleElementsOptions['menus'] = $this->t('Menus');
     }
+    $defaultValue = $this->config('mrmilu_admin.editors_menu')->get('visible_elements');
     $form['visible_elements'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Visible elements'),
       '#options' => $visibleElementsOptions,
-      '#default_value' => $this->config('mrmilu_admin.editors_menu')->get('visible_elements'),
+      '#default_value' => !empty($defaultValue) ? $defaultValue : [],
       '#description' => $this->t('Mr.Milú Administration Base module provides some links by default. You can choose which ones will be visible.'),
     ];
 

@@ -29,7 +29,7 @@ class EditorAdminToolbar extends AdminToolbar {
   public static function preRenderTray(array $build) {
     $currentUser = \Drupal::currentUser();
     $editorsMenuRoles = \Drupal::config('mrmilu_admin.editors_menu')->get('roles');
-    if (!array_intersect($currentUser->getRoles(), $editorsMenuRoles)) {
+    if (empty($editorsMenuRoles) || !array_intersect($currentUser->getRoles(), $editorsMenuRoles)) {
       return parent::preRenderTray($build);
     }
 
